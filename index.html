@@ -133,8 +133,6 @@ textarea{min-height:80px;resize:vertical}
     <div id="signals"></div>
   </section>
 
-  <div class="banner" id="urgentBanner" hidden><strong>Marcó una señal de alarma importante.</strong> Siga el plan acordado con el médico y avise a la familia de inmediato; no espere a enviar el reporte del turno.</div>
-
   <section aria-labelledby="h-notas">
     <h2 id="h-notas">Notas</h2>
     <label for="notas" class="sr">Notas del turno<textarea id="notas" placeholder="Eventos, cambios de oxígeno, cómo pasó la noche…"></textarea></label>
@@ -278,7 +276,6 @@ textarea{min-height:80px;resize:vertical}
   function update(){
     const m=message();$('preview').textContent=m;
     $('waLink').href='https://wa.me/?text='+encodeURIComponent(m);
-    $('urgentBanner').hidden=!SIGNALS.some(s=>s.u&&S.sig[s.k]==='Sí');
     $('status').textContent='';
   }
   function bindStatic(){
