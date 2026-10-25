@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Signos Vitales María Isabel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one narrow column built for a phone held in one hand during a shift; the WhatsApp message is assembled live at the bottom. */
+:root{
+  --bg:#F3F6F7; --surface:#FFFFFF; --ink:#13232D; --muted:#5B6B75; --line:#D8E0E4;
+  --accent:#0B6E99; --accent-ink:#FFFFFF; --accent-soft:#E2F0F6;
+  --warn:#9A5B00; --warn-soft:#FFF1D6; --crit:#B3261E; --crit-soft:#FCE4E2; --ok:#1E7A4C;
+  --wa:#1F8F4E;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E171C; --surface:#16232A; --ink:#E4ECEF; --muted:#93A4AD; --line:#2A3A42;
+  --accent:#4FB3DE; --accent-ink:#06202C; --accent-soft:#16384A;
+  --warn:#F2B44C; --warn-soft:#3A2C12; --crit:#FF8A80; --crit-soft:#3D1C1A; --ok:#5BD08F; --wa:#3CC77A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E171C; --surface:#16232A; --ink:#E4ECEF; --muted:#93A4AD; --line:#2A3A42;
+  --accent:#4FB3DE; --accent-ink:#06202C; --accent-soft:#16384A;
+  --warn:#F2B44C; --warn-soft:#3A2C12; --crit:#FF8A80; --crit-soft:#3D1C1A; --ok:#5BD08F; --wa:#3CC77A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45}
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:flex;flex-direction:column;gap:18px}
+header h1{font-size:1.45rem;line-height:1.2;margin:0;text-wrap:balance;letter-spacing:-.01em}
+header p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0;font-weight:600}
+label{font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:4px;min-width:0}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 10px;min-height:44px;width:100%;min-width:0}
+input[type=number],input[type=time],.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+textarea{min-height:80px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;min-height:44px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;font:inherit;font-weight:500;cursor:pointer;padding:0 10px}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.reading{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 10px;position:relative}
+.reading.warn{border-color:var(--warn);background:var(--warn-soft)}
+.reading.crit{border-color:var(--crit);background:var(--crit-soft)}
+.reading .full{grid-column:1/-1}
+.reading .rowhead{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center}
+.reading .idx{font-family:var(--f-num);font-size:.8rem;color:var(--muted)}
+.flag{font-size:.75rem;font-weight:600;padding:2px 8px;border-radius:99px}
+.reading.warn .flag{color:var(--warn);background:var(--surface)}
+.reading.crit .flag{color:var(--crit);background:var(--surface)}
+.del{background:none;border:none;color:var(--muted);font:inherit;font-size:.85rem;cursor:pointer;padding:6px;min-height:36px}
+.estado{display:flex;gap:6px;flex-wrap:wrap}
+.estado button{flex:1 1 auto;min-height:40px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;font:inherit;font-size:.85rem;cursor:pointer;padding:0 8px}
+.estado button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);font-weight:600}
+.add{border:1.5px dashed var(--accent);color:var(--accent);background:transparent;border-radius:8px;min-height:48px;font:inherit;font-weight:600;cursor:pointer}
+.hint{font-size:.8rem;color:var(--muted);margin:0}
+.sig{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.sig:last-child{border-bottom:none}
+.sig span{font-size:.95rem}
+.sig .seg{flex-wrap:nowrap}
+.sig .seg button{min-width:56px;flex:0 0 auto}
+.sig .when{grid-column:1/-1;flex-direction:row;align-items:center;gap:8px}
+.sig .when input{flex:1}
+.sig .seg button.si[aria-pressed="true"]{background:var(--crit);border-color:var(--crit);color:#fff}
+.banner{border-radius:10px;padding:12px 14px;background:var(--crit-soft);color:var(--ink);border:1px solid var(--crit);font-size:.92rem}
+.banner strong{color:var(--crit)}
+.out pre{font-family:var(--f-num);font-size:.78rem;line-height:1.5;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;margin:0;white-space:pre-wrap;word-break:break-word;overflow-x:auto;max-height:360px;overflow-y:auto}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{min-height:50px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid transparent;padding:0 12px;text-align:center}
+.btn.primary{background:var(--wa);color:#fff}
+.btn.secondary{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.ghost{background:transparent;color:var(--muted);border-color:var(--line);grid-column:1/-1;min-height:44px;font-weight:500}
+.status{font-size:.85rem;color:var(--ok);min-height:1.2em;margin:0}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;grid-column:1/-1;font-size:.9rem}
+.confirm button{min-height:40px;border-radius:8px;font:inherit;cursor:pointer;padding:0 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.confirm button.yes{background:var(--crit);border-color:var(--crit);color:#fff}
+.legend{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:.82rem;color:var(--muted);margin:0}
+.legend dt{font-family:var(--f-num);font-weight:600;color:var(--ink)}
+.legend dd{margin:0}
+@media (max-width:380px){.reading{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:no-preference){.reading{transition:background .2s,border-color .2s}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Signos vitales · María Isabel</h1>
+    <p>Llene las mediciones durante el turno. Al final, toque <b>Enviar por WhatsApp</b> y elija el grupo de enfermería. Lo que escriba se guarda en este teléfono hasta que inicie un turno nuevo.</p>
+  </header>
+
+  <section aria-labelledby="h-turno">
+    <h2 id="h-turno">Turno</h2>
+    <div class="grid2">
+      <label for="fecha">Fecha<input id="fecha" type="date"></label>
+      <label for="enfermera">Enfermera<input id="enfermera" type="text" autocomplete="name" placeholder="Nombre"></label>
+    </div>
+    <div class="seg" role="group" aria-label="Turno" id="turno">
+      <button type="button" data-v="Día" aria-pressed="false">Día</button>
+      <button type="button" data-v="Noche" aria-pressed="false">Noche</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-oxi">
+    <h2 id="h-oxi">Mediciones</h2>
+    <p class="hint">Una medición por tarjeta. Si cambia el oxígeno, mida antes y después.</p>
+    <div id="readings" style="display:flex;flex-direction:column;gap:10px"></div>
+    <button type="button" class="add" id="addReading">+ Agregar medición</button>
+    <dl class="legend">
+      <dt>R</dt><dd>En reposo, despierta</dd>
+      <dt>D</dt><dd>Dormida</dd>
+      <dt>E</dt><dd>Después de esfuerzo (baño, cambio de ropa)</dd>
+      <dt>A</dt><dd>Después de aspirar flemas</dd>
+    </dl>
+  </section>
+
+  <section aria-labelledby="h-res">
+    <h2 id="h-res">Resumen del turno</h2>
+    <div class="grid2">
+      <label for="hBipap">Horas de BiPAP<input id="hBipap" type="number" inputmode="decimal" min="0" max="24" step="0.5" placeholder="0"></label>
+      <label for="hO2">Horas con oxígeno<input id="hO2" type="number" inputmode="decimal" min="0" max="24" step="0.5" placeholder="0"></label>
+    </div>
+    <div class="grid2">
+      <label for="asp">Aspiración de flemas<select id="asp"><option value="No">No</option><option value="Sí">Sí</option></select></label>
+      <label for="aspN">Veces<input id="aspN" type="number" inputmode="numeric" min="0" max="30" placeholder="0" disabled></label>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-sig">
+    <h2 id="h-sig">Señales</h2>
+    <div id="signals"></div>
+  </section>
+
+  <div class="banner" id="urgentBanner" hidden><strong>Marcó una señal de alarma importante.</strong> Siga el plan acordado con el médico y avise a la familia de inmediato; no espere a enviar el reporte del turno.</div>
+
+  <section aria-labelledby="h-notas">
+    <h2 id="h-notas">Notas</h2>
+    <label for="notas" class="sr">Notas del turno<textarea id="notas" placeholder="Eventos, cambios de oxígeno, cómo pasó la noche…"></textarea></label>
+  </section>
+
+  <section class="out" aria-labelledby="h-msg">
+    <h2 id="h-msg">Mensaje para WhatsApp</h2>
+    <pre id="preview"></pre>
+    <div class="actions">
+      <a class="btn primary" id="waLink" href="https://wa.me/" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+      <button type="button" class="btn secondary" id="copyBtn">Copiar texto</button>
+      <p class="status" id="status" role="status" style="grid-column:1/-1"></p>
+      <button type="button" class="btn ghost" id="newShift">Iniciar turno nuevo</button>
+      <div class="confirm" id="confirmBox" hidden>
+        <span>¿Borrar todo lo de este turno?</span>
+        <button type="button" class="yes" id="confirmYes">Sí, borrar</button>
+        <button type="button" id="confirmNo">Cancelar</button>
+      </div>
+    </div>
+    <p class="hint">Si el botón verde no abre WhatsApp, use <b>Copiar texto</b> y péguelo en el grupo.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  const KEY='mi-signos-v1';
+  const SIGNALS=[
+    {k:'somn',t:'Somnolencia difícil de despertar',u:true},
+    {k:'conf',t:'Confusión o desorientación',u:true},
+    {k:'cef',t:'Dolor de cabeza al despertar'},
+    {k:'ahogo',t:'Ahogo / ansiedad'},
+    {k:'flem',t:'Flemas que no logra expulsar'},
+    {k:'cian',t:'Labios morados',u:true}
+  ];
+  const O2=['0','0.5','1','1.5','2','2.5','3','3.5','4','5'];
+  const pad=n=>String(n).padStart(2,'0');
+  const nowHM=()=>{const d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes())};
+  const today=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+  const defTurno=()=>{const h=new Date().getHours();return (h>=7&&h<19)?'Día':'Noche'};
+  function blank(){
+    return {fecha:today(),turno:defTurno(),enfermera:'',readings:[{h:nowHM(),sp:'',fc:'',ta:'',t:'',o2:'',bp:'No',st:''}],vitals:[],hBipap:'',hO2:'',asp:'No',aspN:'',sig:{},sigH:{},notas:''};
+  }
+  let S;
+  try{S=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){S=null}
+  if(!S||!Array.isArray(S.readings)) S=blank();
+  try{const n=localStorage.getItem(KEY+'-name'); if(n&&!S.enfermera) S.enfermera=n}catch(e){}
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S)); if(S.enfermera) localStorage.setItem(KEY+'-name',S.enfermera)}catch(e){}};
+  const $=id=>document.getElementById(id);
+
+  function el(tag,attrs,kids){const e=document.createElement(tag);for(const k in attrs||{}){if(k==='text')e.textContent=attrs[k];else e.setAttribute(k,attrs[k])}(kids||[]).forEach(c=>e.appendChild(c));return e}
+
+  function renderReadings(){
+    const box=$('readings');box.innerHTML='';
+    S.readings.forEach((r,i)=>{
+      const card=el('div',{class:'reading'});
+      const head=el('div',{class:'rowhead'});
+      head.appendChild(el('span',{class:'idx',text:'Medición '+(i+1)}));
+      const flag=el('span',{class:'flag'});head.appendChild(flag);
+      const del=el('button',{type:'button',class:'del','aria-label':'Quitar medición '+(i+1),text:'Quitar'});
+      del.onclick=()=>{S.readings.splice(i,1);if(!S.readings.length)S.readings.push({h:nowHM(),sp:'',fc:'',ta:'',t:'',o2:'',bp:'No',st:''});save();renderReadings();update()};
+      head.appendChild(del);card.appendChild(head);
+      const mk=(lab,key,type,extra)=>{const id='r'+i+key;const inp=el('input',Object.assign({id,type},extra||{}));inp.value=r[key]||'';inp.oninput=()=>{r[key]=inp.value;save();flagCard();update()};const l=el('label',{for:id},[document.createTextNode(lab),inp]);return l};
+      card.appendChild(mk('Hora','h','time'));
+      card.appendChild(mk('SpO2 %','sp','number',{inputmode:'numeric',min:'30',max:'100',placeholder:'89'}));
+      card.appendChild(mk('FC lpm','fc','number',{inputmode:'numeric',min:'30',max:'200',placeholder:'85'}));
+      card.appendChild(mk('TA (ej. 120/70)','ta','text',{inputmode:'text',autocomplete:'off',placeholder:'120/70',class:'num'}));
+      card.appendChild(mk('Temp °C','t','number',{inputmode:'decimal',step:'0.1',min:'33',max:'42',placeholder:'36.2'}));
+      const sid='r'+i+'o2';const sel=el('select',{id:sid});
+      sel.appendChild(el('option',{value:'',text:'—'}));
+      O2.forEach(v=>sel.appendChild(el('option',{value:v,text:v==='0'?'0 (sin O2)':v+' L'})));
+      sel.value=r.o2||'';sel.onchange=()=>{r.o2=sel.value;save();update()};
+      card.appendChild(el('label',{for:sid},[document.createTextNode('Oxígeno L/min'),sel]));
+      const bpg=el('div',{class:'seg',role:'group','aria-label':'BiPAP medición '+(i+1)});
+      ['No','Sí'].forEach(v=>{const b=el('button',{type:'button','aria-pressed':String(r.bp===v),text:v});b.onclick=()=>{r.bp=v;save();renderReadings();update()};bpg.appendChild(b)});
+      const bpl=el('div',{style:'display:flex;flex-direction:column;gap:4px;grid-column:1/-1;min-width:0'},[el('span',{class:'hint',text:'BiPAP puesto'}),bpg]);
+      card.appendChild(bpl);
+      const eg=el('div',{class:'estado',role:'group','aria-label':'Estado medición '+(i+1)});
+      [['R','Reposo'],['D','Dormida'],['E','Esfuerzo'],['A','Aspiración']].forEach(([v,t])=>{const b=el('button',{type:'button','aria-pressed':String(r.st===v),text:v+' · '+t});b.onclick=()=>{r.st=(r.st===v?'':v);save();renderReadings();update()};eg.appendChild(b)});
+      card.appendChild(el('div',{class:'full',style:'display:flex;flex-direction:column;gap:4px'},[el('span',{class:'hint',text:'Estado al medir'}),eg]));
+      const nid='r'+i+'n';const nt=el('textarea',{id:nid,rows:'2',placeholder:'Qué pasó en esta medición (opcional)',style:'min-height:56px'});nt.value=r.n||'';nt.oninput=()=>{r.n=nt.value;save();update()};
+      card.appendChild(el('label',{for:nid,class:'full'},[document.createTextNode('Nota'),nt]));
+      function flagCard(){const v=parseFloat(r.sp);card.classList.remove('warn','crit');flag.textContent='';if(!isNaN(v)){if(v<85){card.classList.add('crit');flag.textContent='SpO2 < 85'}else if(v<88){card.classList.add('warn');flag.textContent='SpO2 85–87'}}}
+      flagCard();box.appendChild(card);
+    });
+  }
+  function renderVitals(){
+    const box=$('vitals');box.innerHTML='';
+    S.vitals.forEach((v,i)=>{
+      const card=el('div',{class:'reading'});
+      const head=el('div',{class:'rowhead'});head.appendChild(el('span',{class:'idx',text:'Toma '+(i+1)}));
+      const del=el('button',{type:'button',class:'del','aria-label':'Quitar toma '+(i+1),text:'Quitar'});del.onclick=()=>{S.vitals.splice(i,1);save();renderVitals();update()};head.appendChild(del);card.appendChild(head);
+      const mk=(lab,key,type,extra)=>{const id='v'+i+key;const inp=el('input',Object.assign({id,type},extra||{}));inp.value=v[key]||'';inp.oninput=()=>{v[key]=inp.value;save();update()};return el('label',{for:id},[document.createTextNode(lab),inp])};
+      card.appendChild(mk('Hora','h','time'));
+      card.appendChild(mk('TA','ta','text',{inputmode:'numeric',placeholder:'120/70',class:'num'}));
+      card.appendChild(mk('Temp °C','t','number',{inputmode:'decimal',step:'0.1',min:'33',max:'42',placeholder:'36.2'}));
+      box.appendChild(card);
+    });
+  }
+  function renderSignals(){
+    const box=$('signals');box.innerHTML='';
+    SIGNALS.forEach(s=>{
+      const row=el('div',{class:'sig'+(s.u?' urgent':'')});
+      row.appendChild(el('span',{text:s.t}));
+      const g=el('div',{class:'seg',role:'group','aria-label':s.t});
+      S.sigH=S.sigH||{};
+      ['No','Sí'].forEach(v=>{const cur=S.sig[s.k]||'No';const b=el('button',{type:'button',class:v==='Sí'?'si':'','aria-pressed':String(cur===v),text:v});b.onclick=()=>{S.sig[s.k]=v;if(v==='Sí'&&!S.sigH[s.k])S.sigH[s.k]=nowHM();save();renderSignals();update()};g.appendChild(b)});
+      row.appendChild(g);
+      if(S.sig[s.k]==='Sí'){const hid='sh'+s.k;const hi=el('input',{id:hid,type:'text',inputmode:'text',autocomplete:'off',class:'num',placeholder:'22:15, 03:00'});hi.value=S.sigH[s.k]||'';hi.oninput=()=>{S.sigH[s.k]=hi.value;save();update()};row.appendChild(el('label',{for:hid,class:'when'},[document.createTextNode('Hora(s)'),hi]))}
+      box.appendChild(row);
+    });
+  }
+  function fmtDate(iso){if(!iso)return'';const [y,m,d]=iso.split('-');return d+'/'+m+'/'+y}
+  function message(){
+    const L=[];
+    L.push('📋 SIGNOS VITALES – María Isabel');
+    L.push('Fecha: '+fmtDate(S.fecha));
+    L.push('Turno: '+(S.turno||''));
+    L.push('Enfermera: '+(S.enfermera||''));
+    L.push('');L.push('🫁 MEDICIONES');
+    const EST={R:'R (reposo)',D:'D (dormida)',E:'E (esfuerzo)',A:'A (aspiración)'};
+    S.readings.filter(r=>r.sp||r.fc||r.ta||r.t||(r.n&&r.n.trim())).forEach((r,i)=>{
+      L.push('');L.push('▸ Medición '+(i+1)+' – '+(r.h||''));
+      L.push('SpO2: '+(r.sp?r.sp+'%':''));
+      L.push('FC: '+(r.fc?r.fc+' lpm':''));
+      L.push('TA: '+(r.ta||''));
+      L.push('Temp: '+(r.t?r.t+' °C':''));
+      L.push('Oxígeno: '+(r.o2===''||r.o2==null?'':(r.o2==='0'?'0 (sin oxígeno)':r.o2+' L/min')));
+      L.push('BiPAP: '+(r.bp||''));
+      L.push('Estado: '+(EST[r.st]||''));
+      const n=(r.n||'').replace(/[\n\r]+/g,' / ').trim();if(n)L.push('Nota: '+n);
+    });
+    L.push('');L.push('⏱ RESUMEN DEL TURNO');
+    L.push('Horas de BiPAP: '+(S.hBipap||'0'));
+    L.push('Horas con oxígeno: '+(S.hO2||'0'));
+    L.push('Aspiración de flemas: '+(S.asp==='Sí'?('Sí'+(S.aspN?', '+S.aspN+' veces':'')):'No'));
+    L.push('');L.push('⚠️ SEÑALES');
+    SIGNALS.forEach(s=>{const v=S.sig[s.k]||'No';const h=(S.sigH&&S.sigH[s.k]||'').trim();L.push(s.t+': '+v+(v==='Sí'&&h?', '+h:''))});
+    if(S.notas&&S.notas.trim()){L.push('');L.push('📝 Notas: '+S.notas.trim())}
+    return L.join('\n');
+  }
+  function update(){
+    const m=message();$('preview').textContent=m;
+    $('waLink').href='https://wa.me/?text='+encodeURIComponent(m);
+    $('urgentBanner').hidden=!SIGNALS.some(s=>s.u&&S.sig[s.k]==='Sí');
+    $('status').textContent='';
+  }
+  function bindStatic(){
+    const f=$('fecha');f.value=S.fecha;f.oninput=()=>{S.fecha=f.value;save();update()};
+    const n=$('enfermera');n.value=S.enfermera;n.oninput=()=>{S.enfermera=n.value;save();update()};
+    document.querySelectorAll('#turno button').forEach(b=>{b.setAttribute('aria-pressed',String(S.turno===b.dataset.v));b.onclick=()=>{S.turno=b.dataset.v;save();document.querySelectorAll('#turno button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));update()}});
+    [['hBipap','hBipap'],['hO2','hO2'],['aspN','aspN'],['notas','notas']].forEach(([id,k])=>{const e=$(id);e.value=S[k]||'';e.oninput=()=>{S[k]=e.value;save();update()}});
+    const a=$('asp');a.value=S.asp;$('aspN').disabled=S.asp!=='Sí';a.onchange=()=>{S.asp=a.value;$('aspN').disabled=S.asp!=='Sí';save();update()};
+  }
+  $('addReading').onclick=()=>{const last=S.readings[S.readings.length-1]||{};S.readings.push({h:nowHM(),sp:'',fc:'',ta:'',t:'',o2:last.o2||'',bp:last.bp||'No',st:''});save();renderReadings();update();const cards=document.querySelectorAll('#readings .reading');const t=cards[cards.length-1]&&cards[cards.length-1].querySelector('input[type=number]');if(t)t.focus()};
+  $('copyBtn').onclick=()=>{
+    const m=message();
+    const ok=()=>{$('status').textContent='Texto copiado. Péguelo en el grupo de WhatsApp.'};
+    const fallback=()=>{const r=document.createRange();r.selectNodeContents($('preview'));const s=getSelection();s.removeAllRanges();s.addRange(r);$('status').textContent='Texto seleccionado: use Copiar del teléfono.'};
+    try{navigator.clipboard.writeText(m).then(ok,fallback)}catch(e){fallback()}
+  };
+  $('newShift').onclick=()=>{$('confirmBox').hidden=false;$('newShift').hidden=true};
+  $('confirmNo').onclick=()=>{$('confirmBox').hidden=true;$('newShift').hidden=false};
+  $('confirmYes').onclick=()=>{const name=S.enfermera;S=blank();S.enfermera=name;save();$('confirmBox').hidden=true;$('newShift').hidden=false;bindStatic();renderReadings();renderSignals();update();window.scrollTo({top:0})};
+  bindStatic();renderReadings();renderSignals();update();
+})();
+</script>
+
+</body>
+</html>
